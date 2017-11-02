@@ -28,8 +28,7 @@ context...
 [jump to](.\xxx\xx.md)
 [jump to](http://www.xxx.com/#anchor3)
 ```
-*怎样跳转到其他markdown文件上的锚点？（尚不知道）*
-
+- [ ] *<u>怎样跳转到其他markdown文件上的锚点？（尚不知道）</u>*
 
 参考：
 1.[Cross-reference (named anchor) in markdown](https://stackoverflow.com/questions/5319754/cross-reference-named-anchor-in-markdown/17028463#17028463)
@@ -42,8 +41,3 @@ context...
 ### Q5：如何插入高级图表（流程图等）？
 ### Q6: 如何使代码块显示行号？
 ### Q7: 如何插入图片，图片链接？
-
-a
-$$
-e^{i\pi}+1=0
-$$
