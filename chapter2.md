@@ -1,12 +1,9 @@
 # 第二章 学习使用Markdown
 ---
 - 一些Markdown的学习网站
-  - GitHub guide关于markdown的说明：
-  https://guides.github.com/features/mastering-markdown/
-  - Markdown 语法基础及使用教程:
-  http://col.dog/2015/11/22/Markdown-Syntax/
-  - github guides
-  https://guides.github.com/features/mastering-markdown/
+  - [GitHub guide关于markdown的说明](https://guides.github.com/features/mastering-markdown/)
+  - [Markdown 语法基础及使用教程](http://col.dog/2015/11/22/Markdown-Syntax/)
+  - [github guides](https://guides.github.com/features/mastering-markdown/)
 
 ## 2.1 一些常见的问题
 
@@ -26,7 +23,7 @@ context...
 ```
 [jump to here](#anchor2)
 ```
-* 跳转到其他markdown文件(.\xxx\xx.md)或者某个网址(http://www.xxx.com/)上的锚点(anchor3)：
+* 跳转到其他markdown文件(`.\xxx\xx.md`)或者某个网址(`http://www.xxx.com/`)上的锚点(anchor3)：
 ```
 [jump to](.\xxx\xx.md)
 [jump to](http://www.xxx.com/#anchor3)
@@ -46,37 +43,4 @@ context...
 ### Q6: 如何使代码块显示行号？
 ### Q7: 如何插入图片，图片链接？
 
-$$
-e^{i\pi}+1=0
-$$
-
-
-```
-st=>start: Start
-i=>inputoutput: 输入年份n
-cond1=>condition: n能否被4整除？
-cond2=>condition: n能否被100整除？
-cond3=>condition: n能否被400整除？
-o1=>inputoutput: 输出非闰年
-o2=>inputoutput: 输出非闰年
-o3=>inputoutput: 输出闰年
-o4=>inputoutput: 输出闰年
-e=>end
-st->i->cond1
-cond1(no)->o1->e
-cond1(yes)->cond2
-cond2(no)->o3->e
-cond2(yes)->cond3
-cond3(yes)->o2->e
-cond3(no)->o4->e
-```
-
-```python
-@requires_authorization
-class SomeClass:
-    pass
-
-if __name__ == '__main__':
-    # A comment
-    print 'hello world'
-```
+a$$e^{i\pi}+1=0$$
