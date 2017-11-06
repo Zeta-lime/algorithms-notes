@@ -41,12 +41,27 @@ context...
 2.[Anchors in Markdown](https://gist.github.com/asabaylus/3071099#anchors-in-markdown)
 
 
-### Q2：一些有用的HTML标签来增强markdown的能力
-
+### Q2：常用的文字样式
+- 一些有用的HTML标签
 <Center>文字居中</Center>
 <u>下划线</u>
-
 空行<br><br>空行
+
+- 高亮
+==marked==
+- *斜体*、**粗体**、~~删除线~~
+- 小标
+30~th~
+- 上标
+30^th^
+
+- 脚注
+Content [^1]
+
+[^1]: Hi! This is a footnote
+
+- 下标
+H~2~O
 
 ### Q3：如何插入doc，html文件？
 
@@ -249,11 +264,44 @@ context...
 
 这不是标准markdown支持的，需要额外的插件
 参考一些在线的markdown编辑器如cmd markdown、有道markdown、CSDN markdown
+参考 <https://shd101wyy.github.io/markdown-preview-enhanced/#/zh-cn/diagrams>
 
-### Q6: 如何使代码块显示行号？
+### Q6: 如何高亮语法、代码块显示行号？
 
-这不是标准markdown支持的，需要额外的插件，同上。
+这不是标准markdown支持的，需要额外的插件，这里是markdown preview enhanced(MPE)插件的语法。
+#### 语法高亮
 
+你可以给你的代码块添加任何一种语言的语法高亮
+
+例如，给 ruby 代码添加语法高亮：
+
+```ruby
+require 'redcarpet'
+markdown = Redcarpet.new("Hello World!")
+puts markdown.to_html
+```
+#### 代码块 class（MPE 扩展的特性）
+
+你可以给你的代码块设置 class。
+
+例如，添加 class1 class2 到一个 代码块：
+
+```javascript {.class1 .class}
+function add(x, y) {
+  return x + y
+}
+```
+#### 代码行数
+
+如果你想要你的代码块显示代码行数，只要添加 line-numbers class 就可以了。
+
+例如：
+
+```javascript {.line-numbers}
+function add(x, y) {
+  return x + y
+}
+```
 
 ### Q7: 如何插入图片，图片链接？
 
