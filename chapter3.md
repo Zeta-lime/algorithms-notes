@@ -14,7 +14,7 @@ http://blog.csdn.net/column/details/atom-tutorial.html
 
 ## 3.2 快捷键
 
-###常用快捷键(Windows)
+### 常用快捷键(Windows)
 
 - 文件
 `ctrl-n`新建文件
@@ -195,7 +195,10 @@ Atom的所有配置文件（除了样式表和初始脚本）全部用CSON编写
   - 汉化
   [simplified-chinese-menu](https://atom.io/packages/simplified-chinese-menu)
   - 编辑增强
-  [markdown-preview-enhanced]
+  [markdown-preview-enhanced](https://atom.io/packages/markdown-preview-enhanced)Markdown增强
+  [highlight-selected](https://atom.io/packages/highlight-selected)高亮与选择词相同的位置
+  [highlight-line](https://atom.io/packages/highlight-line)高亮当前编辑的行
+  [activate-power-mode](https://atom.io/packages/activate-power-mode) 炫酷的打字特效
   - coding增强
   [atom-terminal](https://atom.io/packages/atom-terminal)
   - 主题  
@@ -206,7 +209,6 @@ Atom的所有配置文件（除了样式表和初始脚本）全部用CSON编写
   [file-icons](https://atom.io/packages/file-icons) 给文件加上好看的图标  
   [atom-minimap](https://atom.io/users/atom-minimap) 方便美观的缩略滚动图  
   [pretty-json](https://atom.io/packages/pretty-json) json格式化工具  
-  [activate-power-mode](https://atom.io/packages/activate-power-mode) 炫酷的打字特效
   - git  
   [atomatigit](https://atom.io/packages/atomatigit) 可视化git操作  
   [git-time-machine](https://atom.io/packages/git-time-machine) git版本对比工具，可视化选择每一个commit  
