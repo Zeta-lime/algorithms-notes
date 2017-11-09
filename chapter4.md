@@ -25,6 +25,7 @@
 ![git基本概念](/assets/git基本概念.png)
 
 - git命令
+
 ![git命令](http://img.blog.csdn.net/20161202183909310 "git命令")
 
 ### git原理概念
@@ -377,10 +378,9 @@ We need quotes so that Git will receive the wildcard before our shell can interf
 >安装git的同时会安装名为gitk的工具(集成diff可视化)。在仓库目录使用这个工具，可以在GUI下确认提交记录。
 
 ### 快速clone GitHub中的工程
+`git clone [--depth=14] https://xxxx/xxx.git [<directory>]`
 
-`git clone [--depth=14] https://xxxx/xxx.git`
-
-常用的也就是 git clone + 路径。但是其中有个选项 --depth
+常用的也就是 git clone + 远程数据库的URL。但是其中有个选项 --depth
 
 其中的 --depth=14 选项，告诉gitHub 仅仅pull down 最近的14条commits
 这样你的download又快又小。
@@ -443,6 +443,7 @@ This command takes a remote name and a repository URL, which in this case is  ht
 这里有两个参数，第一个指定一个名字给添加的远程仓库，第二个指定远程仓库的URL，一般惯例主仓库用名origin
 >git remote:
 Git doesn't care what you name your remotes, but it's typical to name your main one origin.
+执行推送或者拉取的时候，如果省略了远程数据库的名称，则默认使用名为”origin“的远程数据库。因此一般都会把远程数据库命名为origin。
 
 ### 将本地分支push到远程仓库
     git push -u origin master
@@ -457,16 +458,15 @@ It's usually hidden.
 If you click it you'll notice it has all sorts of directories and files inside it. You'll rarely ever need to do anything inside here but it's the guts of Git, where all the magic happens.
 
 
-我们远程仓库的名字是origin，默认本地分支的名字是master。参数u告诉git记住以上参数，这样下次直接使用`git push`不用再加上参数。
+我们远程仓库的名字是origin，默认本地分支的名字是master。参数`-u`告诉git记住以上参数，这样下次直接使用`git push`不用再加上参数。但是，首次运行指令向空的远程数据库推送时，必须指定远程数据库名称和分支名称。
 这样本地的master分支将track origin仓库的master分支。
+push到GitHub时，有两种方式https和ssh，使用https需要输入GitHub的账号密码。
+
 ## 4.6 从远程仓库pull
 ###将远程分支pull到本地仓库
 当远程仓库的master分支有了变化，我们需要把这些变化pull到我们的本地仓库中
     git pull origin master
 这时远程仓库的新修改会覆盖我们本地工作区的内容，但是不用担心，了解git原理的话，就会知道，只要我们pull前先将我们的修改commit到本地仓库，这些内容就不会丢失。
->git stash:
-Sometimes when you go to pull you may have changes you don't want to commit just yet. One option you have, other than commiting, is to stash the changes.
-Use the command `git stash` to stash your changes, and `git stash apply` to re-apply your changes after your pull.
 
 ## 4.7 使用diff查看文件变化
 `git-diff` 比较的是工作目录（working tree）和暂存区域快照（index）之间的差异，也就是修改后还没有暂存起来的内容
@@ -506,12 +506,31 @@ git commit -am "Delete stuff"
 
 ## 4.9 创建分支
 当开发者开发某项新功能或者解决某个bug时，他们经常创建一个copy（aka.分支branch）(aka.also known as)，这样就能单独提交。但他们完成时，他们可以将自己的分支与master分支合并
+
+![capture_stepup1_1_2](/assets/capture_stepup1_1_2.png)
+
+### 分支的运用
+
+在Git您可以自由地建立分支。但是，要先确定运用规则才可以有效地利用分支。
+
+这里我们会介绍两种分支 (“Merge分支”和 “Topic分支” ) 的运用规则。
+
+- Merge分支
+Merge分支是为了可以随时发布release而创建的分支，它还能作为Topic分支的源分支使用。保持分支稳定的状态是很重要的。如果要进行更改，通常先创建Topic分支，而针对该分支，可以使用Jenkins之类的CI工具进行自动化编译以及测试。
+通常，大家会将master分支当作Merge分支使用。
+
+- Topic分支
+Topic分支是为了开发新功能或修复Bug等任务而建立的分支。若要同时进行多个的任务，请创建多个的Topic分支。
+Topic分支是从稳定的Merge分支创建的。完成作业后，要把Topic分支合并回Merge分支。
+
+![capture_stepup1_2_1](/assets/capture_stepup1_2_1.png)
+
 ### 创建当前项目的分支
 `git branch <branch name>`
 >Branches are what naturally happens when you want to work on multiple features at the same time. Rather you'd separate the code base into two "snapshots" (branches) and work on and commit to them separately. As soon as one was ready, you might merge this branch back into the master branch and push it to the remote server.
 
 ### 在分支间切换
-`git branch`,可以看到当前仓库中的所有分支
+`git branch`,可以看到当前仓库中的所有分支,前面有*的就是现在的分支。
 使用`git checkout <branch name>`可以切换到该分支
 >All at Once
 You can use:
@@ -519,8 +538,21 @@ git checkout -b new_branch
 to checkout and create a branch at the same time. This is the same thing as doing:
 git branch new_branch
 git checkout new_branch
+若要切换作业的分支，就要进行checkout操作。进行checkout时，git会从工作树还原向目标分支提交的修改内容。checkout之后的提交记录将被追加到目标分支。
 
-### 4.10 合并分支
+HEAD指向的是现在使用中的分支的最后一次更新。通常默认指向master分支的最后一次更新。通过移动HEAD，就可以变更使用的分支。
+
+提交时使用`~`(tilde)和`^`(caret)就可以指定某个提交的相对位置。最常用的就是相对于HEAD的位置。HEAD后面加上`~`(tilde）可以指定HEAD之前的提交记录。合并分支会有多个根节点，您可以用`^`(caret) 来指定使用哪个为根节点。
+
+![capture_stepup1_3_2](/assets/capture_stepup1_3_2.png)
+
+>git stash:
+Sometimes when you go to pull you may have changes you don't want to commit just yet. One option you have, other than commiting, is to stash the changes.
+Use the command `git stash` to stash your changes, and `git stash apply` to re-apply your changes after your pull.
+
+还未提交的修改内容以及新添加的文件，留在索引区域或工作树的情况下切换到其他的分支时，修改内容会从原来的分支移动到目标分支。但是如果在checkout的目标分支中相同的文件也有修改，checkout会失败的。这时要么先提交修改内容，要么用stash暂时保存修改内容后再checkout。
+stash是临时保存文件修改内容的区域。stash可以暂时保存工作树和索引里还没提交的修改内容，您可以事后再取出暂存的修改，应用到原先的分支或其他的分支上。
+## 4.10 合并分支
 >Pull Requests
 If you're hosting your repo on GitHub, you can do something called a pull request.
 A pull request allows the boss of the project to look through your changes and make comments before deciding to merge in the change. It's a really great feature that is used all the time for remote workers and open-source projects.
@@ -529,6 +561,66 @@ A pull request allows the boss of the project to look through your changes and m
 `git checkout master`
 使用命令`git merge <branch name>`来合并分支
 >Merge Conflicts can occur when changes are made to a file at the same time. A lot of people get really scared when a conflict happens, but fear not! They aren't that scary, you just need to decide which code to keep.
+
+修改完成topic分支后要合并回merge分支。合并分支有2种方法：使用merge或rebase。使用这2种方法，合并后分支的历史记录会有很大的差别。
+
+- merge
+
+使用merge可以合并多个历史记录的流程。
+
+如下图所示，bugfix分支是从master分支分叉出来的。
+![capture_stepup1_4_1](/assets/capture_stepup1_4_1.png)
+
+合并 bugfix分支到master分支时，如果master分支的状态没有被更改过，那么这个合并是非常简单的。 bugfix分支的历史记录包含master分支所有的历史记录，所以通过把master分支的位置移动到bugfix的最新分支上，Git 就会合并。这样的合并被称为fast-forward（快进）合并。
+
+![capture_stepup1_4_2](/assets/capture_stepup1_4_2.png)
+
+但是，master分支的历史记录有可能在bugfix分支分叉出去后有新的更新。这种情况下，要把master分支的修改内容和bugfix分支的修改内容汇合起来。
+
+![capture_stepup1_4_3](/assets/capture_stepup1_4_3.png)
+
+因此，合并两个修改会生成一个提交。这时，master分支的HEAD会移动到该提交上。
+
+![capture_stepup1_4_4](/assets/capture_stepup1_4_4.png)
+
+>Note
+执行合并时，如果设定了non fast-forward选项，即使在能够fast-forward合并的情况下也会生成新的提交并合并。
+![capture_stepup1_4_5](/assets/capture_stepup1_4_5.png)
+执行non fast-forward后，分支会维持原状。那么要查明在这个分支里的操作就很容易了。
+
+- rebase
+
+跟merge的例子一样，如下图所示，bugfix分支是从master分支分叉出来的。
+
+![capture_stepup1_4_6](/assets/capture_stepup1_4_6.png)
+
+如果使用rebase方法进行分支合并，会出现下图所显示的历史记录。现在我们来简单地讲解一下合并的流程吧。
+
+![capture_stepup1_4_7](/assets/capture_stepup1_4_7.png)
+首先，rebase bugfix分支到master分支, bugfix分支的历史记录会添加在master分支的后面。如图所示，历史记录成一条线，相当整洁。
+
+这时移动提交X和Y有可能会发生冲突，所以需要修改各自的提交时发生冲突的部分。
+
+![capture_stepup1_4_8](/assets/capture_stepup1_4_8.png)
+
+rebase之后，master的HEAD位置不变。因此，要合并master分支和bugfix分支，即是将master的HEAD移动到bugfix的HEAD这里。
+
+![capture_stepup1_4_9](/assets/capture_stepup1_4_9.png)
+
+>Note
+Merge和rebase都是合并历史记录，但是各自的特征不同。
+merge
+保持修改内容的历史记录，但是历史记录会很复杂。
+rebase
+历史记录简单，是在原有提交的基础上将差异内容反映进去。
+因此，可能导致原本的提交内容无法正常运行。
+您可以根据开发团队的需要分别使用merge和rebase。
+例如，想简化历史记录:
+>- 在topic分支中更新merge分支的最新代码，请使用rebase。
+>- 向merge分支导入topic分支的话，先使用rebase，再使用merge。
+
+
+
 
 ### 4.11 删除分支
 `git branch -d <branch name>`
@@ -540,3 +632,193 @@ You can either add the --force (-f) option or use -D which combines -d -f togeth
 
 合并到master分支后，提交到远程仓库
 `git push`
+
+## 4.12 解决冲突
+在执行pull之后，进行下一次push之前，如果其他人进行了推送内容到远程数据库的话，那么你的push将被拒绝。这种情况下，在读取别人push的变更并进行合并操作之前，你的push都将被拒绝。这是因为，如果不进行合并就试图覆盖已有的变更记录的话，其他人push的变更就会丢失。
+>合并的时候，Git会自动合并已有的变更点！不过，也存在不能自动合并的情况。如果远程数据库和本地数据库的同一个地方都发生了修改的情况下，因为无法自动判断要选用哪一个修改，所以就会发生冲突。
+![capture_intro5_1_3](/assets/capture_intro5_1_3.png)
+==分割线上方是本地数据库的内容,
+下方是远程数据库的编辑内容。
+
+
+现在，我们将要学习怎样解决冲突。
+首先，我们用同一个分支的两个本地仓库“tutorial”和“tutorial2”制造一个冲突状态。
+
+首先，打开tutorial目录的sample.txt文档，添加以下黑体字之后进行提交。
+```
+连猴子都懂的Git命令
+add 把变更录入到索引中
+commit 记录索引的状态
+$ git add sample.txt
+$ git commit -m "添加commit的说明"
+[master 95f15c9] 添加commit的说明
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+```
+
+接下来，打开tutorial2目录的sample.txt文档，添加以下黑体字之后进行提交。
+```
+连猴子都懂的Git命令
+add 把变更录入到索引中
+pull 取得远端数据库的内容
+$ git add sample.txt
+$ git commit -m "添加pull的说明"
+[master 4c01823] 添加pull的说明
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+```
+现在从tutorial2 推送内容到远程数据库。
+```
+$ git push
+Username: <用户名>
+Password: <密码>
+Counting objects: 5, done.
+Delta compression using up to 4 threads.
+Compressing objects: 100% (2/2), done.
+Writing objects: 100% (3/3), 391 bytes, done.
+Total 3 (delta 0), reused 0 (delta 0)
+To https://nulab.backlog.jp/git/BLG/tutorial.git
+   3da09c1..4c01823  master -> master
+```
+在目前的远程数据库，"sample.txt"文档已包含第三行内容「pull 取得远端数据库的内容」，并且已被存储到历史记录中啦。
+
+现在从tutorial推送内容到远程数据库吧。
+```
+$ git push
+Username: <用户名>
+Password: <密码>
+To https://nulab.backlog.jp/git/BLG/tutorial.git
+ ! [rejected]        master -> master (non-fast-forward)
+error: failed to push some refs to 'https://nulab.backlog.jp/git/BLG/tutorial.git'
+To prevent you from losing history, non-fast-forward updates were rejected
+Merge the remote changes (e.g. 'git pull') before pushing again.  See the
+'Note about fast-forwards' section of 'git push --help' for details.
+```
+由于远程仓库的内容在tutorial一次pull、push之间已经发生修改，在合并修改时发生了冲突，推送被拒绝（rejected）了。
+解决冲突
+
+**为了把变更内容推送到远程数据库，我们必须手动解决冲突。首先运行pull，以从远程数据库取得最新的变更记录。**
+```
+$ git pull origin master
+Username: <用户名>
+Password: <密码>
+remote: Counting objects: 5, done.
+remote: Compressing objects: 100% (2/2), done.
+remote: Total 3 (delta 0), reused 0 (delta 0)
+Unpacking objects: 100% (3/3), done.
+From https://nulab.backlog.jp/git/BLG/tutorial
+ * branch            master     -> FETCH_HEAD
+Auto-merging sample.txt
+CONFLICT (content): Merge conflict in sample.txt
+Automatic merge failed; fix conflicts and then commit the result.
+```
+显示合并时发生冲突的讯息。
+讯息显示「Merge conflict in sample.txt」。打开sample.txt文件，我们看到Git已添加标示以显示冲突部分。为Git无法完成主动合并的部分做手动的修改。
+```
+连猴子都懂的Git命令
+add 把变更录入到索引中
+<<<<<<< HEAD
+commit 记录索引的状态
+=======
+pull 取得远端数据库的内容
+>>>>>>> 4c0182374230cd6eaa93b30049ef2386264fe12a
+```
+
+进行修改
+```
+连猴子都懂的Git命令
+add 把变更录入到索引中
+commit 记录索引的状态
+pull 取得远端数据库的内容
+```
+文件的内容发生了修改，所以需要进行提交。
+```
+$ git add sample.txt
+$ git commit -m "合并"
+[master d845b81] 合并
+```
+这样就完成了从远程数据库导入最新的修改内容。
+
+我们可以用log命令来确认数据库的历史记录是否准确。指定--graph选项，能以文本形式显示更新记录的流程图。指定--oneline选项，能在一行中显示提交的信息。
+```
+$ git log --graph --oneline
+*   d845b81 合并
+|\
+| * 4c01823 添加pull的说明
+* | 95f15c9 添加commit的说明
+|/
+* 3da09c1 添加add的说明
+* ac56e47 first commit
+```
+这表明两个修改记录已经整合了。
+
+现在可以push到远程仓库了
+
+## 4.13 应用分支开发软件流程
+topic分支和merge分支的运用实例我们用简单的实例来讲解topic分支和merge分支的操作方法。
+
+例如，在开发功能的topic分支操作途中，需要修改bug。
+
+![capture_stepup1_5_1](/assets/capture_stepup1_5_1.png)
+
+这时，merge分支还是处于开发功能之前的状态。在这里新建修改错误用的主题分支，就可以从开发功能的作业独立出来，以便开始新的工作。
+
+![capture_stepup1_5_2](/assets/capture_stepup1_5_2.png)
+
+完成bug修正的工作后，把分支导入到原本的merge分支后就可以公开了。
+
+导入到原本的合并分支後就可以公开
+![capture_stepup1_5_3](/assets/capture_stepup1_5_3.png)
+回到原本的分支继续进行开发功能的操作
+![capture_stepup1_5_4](/assets/capture_stepup1_5_4.png)
+但是，如果要继续进行操作，你会发现需要之前修正bug时提交X的内容。有2种导入提交X的内容的方法：一种是直接merge，另一种是和rebase导入提交X的合并分支。
+
+这里我们使用rebase合并分支的方法。
+
+![capture_stepup1_5_5](/assets/capture_stepup1_5_5_15j48jfes.png)
+
+在导入提交X的内容的状态下继续进行开发功能。
+
+这样，有效地利用分支的话就可以同时进行不同的作业了。
+>专栏「A successful Git branching model」
+>
+>作为Git的分支的用例 ，这里介绍 A successful Git branching model
+>
+>原文:
+>http://nvie.com/posts/a-successful-git-branching-model/
+
+这个用例主要分为
+
+主分支
+特性分支
+release分支
+hotFix分支
+分别使用4个种类的分支来进行开发的。
+
+![capture_stepup1_5_6](/assets/capture_stepup1_5_6.png)
+
+主分支
+主分支有两种：master分支和develop分支
+
+master
+master分支只负责管理发布的状态。在提交时使用标签记录发布版本号。
+develop
+develop分支是针对发布的日常开发分支。刚才我们已经讲解过有合并分支的功用。
+特性分支
+特性分支就是我们在前面讲解过的topic分支的功用。
+
+这个分支是针对新功能的开发，在bug修正的时候从develop分支分叉出来的。基本上不需要共享特性分支的操作，所以不需要远端控制。完成开发后，把分支合并回develop分支后发布。
+
+release分支
+release分支是为release做准备的。通常会在分支名称的最前面加上release-。release前需要在这个分支进行最后的调整，而且为了下一版release开发用develop分支的上游分支。
+
+一般的开发是在develop分支上进行的，到了可以发布的状态时再创建release分支，为release做最后的bug修正。
+
+到了可以release的状态时，把release分支合并到master分支，并且在合并提交里添加release版本号的标签。
+
+要导入在release分支所作的修改，也要合并回develop分支。
+
+hotFix分支
+hotFix分支是在发布的产品需要紧急修正时，从master分支创建的分支。通常会在分支名称的最前面加上 hotfix-。
+
+例如，在develop分支上的开发还不完整时，需要紧急修改。这个时候在develop分支创建可以发布的版本要花许多的时间，所以最好选择从master分支直接创建分支进行修改，然后合并分支。
+
+修改时创建的hotFix分支要合并回develop分支。
