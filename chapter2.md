@@ -9,7 +9,6 @@
   - [github guides](https://guides.github.com/features/mastering-markdown/)
   - [GitHub Flavored Markdown](https://github.github.com/gfm/)
   - [dillinger编辑器的markdown介绍](https://www.markdownguide.org/)
-[TOC]
 
 ## 2.1 一些常见的问题（FAQ）
 

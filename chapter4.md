@@ -78,6 +78,8 @@ A place where we can group files together before we "commit" them to Git.
 Commit
 A "commit" is a snapshot of our repository. This way if we ever need to look back at the changes we've made (or if someone else does), we will see a nice timeline of all changes.
 
+>执行一次commit即进行一次快照存入仓库
+
 基本的 Git 工作流程如下：
 
 1. 在工作目录中修改某些文件。
@@ -534,8 +536,10 @@ Topic分支是从稳定的Merge分支创建的。完成作业后，要把Topic�
 使用`git checkout <branch name>`可以切换到该分支
 >All at Once
 You can use:
-git checkout -b new_branch
-to checkout and create a branch at the same time. This is the same thing as doing:
+`git checkout -b new_branch`
+to checkout and create a branch at the same time. 
+在checkout命令指定 -b选项执行，可以创建分支并进行切换。
+This is the same thing as doing:
 git branch new_branch
 git checkout new_branch
 若要切换作业的分支，就要进行checkout操作。进行checkout时，git会从工作树还原向目标分支提交的修改内容。checkout之后的提交记录将被追加到目标分支。
@@ -590,6 +594,24 @@ A pull request allows the boss of the project to look through your changes and m
 
 - rebase
 
+`git checkout bugfix`
+与merge不同，rebase时master是被合并的分支，所以要checkout的是bugfix
+`git rebase master` 
+rebase 后面接的是重载的基础分支。
+和merge时的操作相同，需要修改发生冲突的部分。
+rebase的时候，修改冲突后的提交不是使用commit命令，而是执行rebase命令指定 --continue选项。若要取消rebase，指定 --abort选项。
+
+`git add myfile.txt`
+`git rebase --continue`
+>When you have resolved this problem run "git rebase --continue".
+If you would prefer to skip this patch, instead run "git rebase --skip".
+To check out the original branch and stop rebasing run "git rebase --abort".
+
+这样，在master分支的bugfix分支就可以fast-forward合并了。切换到master分支后执行合并。
+
+`git checkout master`
+`git merge bugfix`
+
 跟merge的例子一样，如下图所示，bugfix分支是从master分支分叉出来的。
 
 ![capture_stepup1_4_6](/assets/capture_stepup1_4_6.png)
@@ -617,12 +639,14 @@ rebase
 您可以根据开发团队的需要分别使用merge和rebase。
 例如，想简化历史记录:
 >- 在topic分支中更新merge分支的最新代码，请使用rebase。
->- 向merge分支导入topic分支的话，先使用rebase，再使用merge。
+>- 向merge分支导入topic分支的话，先使用rebase在topic分支合并merge分支最新代码，再使用merge将topic导入主分支。
+
+- 取消刚才的合并。
+
+`git reset --hard HEAD~`
 
 
-
-
-### 4.11 删除分支
+## 4.11 删除分支
 `git branch -d <branch name>`
 
 强制删除分支`git branch -D <branch name>`
@@ -822,3 +846,148 @@ hotFix分支是在发布的产品需要紧急修正时，从master分支创建�
 例如，在develop分支上的开发还不完整时，需要紧急修改。这个时候在develop分支创建可以发布的版本要花许多的时间，所以最好选择从master分支直接创建分支进行修改，然后合并分支。
 
 修改时创建的hotFix分支要合并回develop分支。
+
+## 4.14 fetch
+执行pull，远程数据库的内容就会自动合并。但是，有时只是想确认本地数据库的内容而不想合并。这种情况下，请使用fetch。
+
+执行fetch就可以取得远程数据库的最新历史记录。取得的提交会导入到没有名字的分支，这个分支可以从名为FETCH_HEAD的退出。
+在这个状态下，若要把远程数据库的内容合并到本地数据库，可以合并FETCH_HEAD，或者重新执行pull。
+实际上pull的内容是fetch + merge组成的。
+
+## 4.15 标签
+标签是为了更方便地区分commit而给它标上易懂的名称。
+
+Git可以使用2种标签：轻标签和注解标签。打上的标签是固定的，不能像分支那样可以移动位置。
+
+- 轻标签
+  添加名称
+- 注解标签
+  添加名称
+  添加注解
+  添加签名
+一般情况下，发布版本标签是采用注解标签来添加注解或签名的。轻标签是为了在本地暂时使用或一次性使用。
+可以指定标签名称以checkout，或reset在「修改提交」的注解，还可以简单的恢复过去特定的状态。
+### 添加轻标签
+使用tag命令来添加标签，<tagname>表示标签的名称。
+
+`$ git tag <tagname>`
+在HEAD指向的提交里添加名为apple的标签，请执行以下的命令。
+
+`$ git tag apple`
+如果没有使用参数而执行tag，可以显示标签列表。
+
+`$ git tag`
+
+如果在log命令添加 --decorate选项执行，可以显示包含标签资料的历史记录。
+
+`$ git log --decorate`
+### 添加注解标签
+若要添加注解标签，可以在tag命令指定 -a选项执行。执行后会启动编辑区，请输入注解，也可以指定-m选项来添加注解。
+
+`$ git tag -a <tagname>`
+在HEAD指向的提交里添加名为banana的标签，请执行以下的命令。
+
+`$ git tag -am "连猴子都懂的Git" banana`
+如果在tag命令指定-n选项执行，可以显示标签的列表和注解。
+
+`$ git tag -n`
+apple           first commit
+banana          连猴子都懂的Git
+
+### 删除标签
+
+若要删除标签，在tag命令指定 -d选项执行。
+
+`$ git tag -d <tagname>`
+
+## 4.16 修改commit
+- 指定amend选项执行提交的话，可以修改同一个分支最近commit的内容和注解。
+`$ git commit --amend`
+
+>主要使用的场合：
+添加最近提交时漏掉的档案
+修改最近提交的注解
+修改后git log里不会保留被修改的commit，其本身也是一次commit会覆盖上一次的commit（新的commit id），因此commit前可以添加删除文件。是对上一次commit的修改
+
+
+- 在revert可以取消指定的提交内容。**使用后面要提到的rebase -i或reset也可以删除提交。但是，不能随便删除已经发布的提交，这时需要通过revert创建要否定的提交。**
+`$ git revert HEAD`
+>会保留被撤销的commit，git log里能看到恢复日志，运行完成后工作区文件恢复到该commit前的状态
+
+- 在reset可以遗弃不再使用的提交。执行遗弃时，需要根据影响的范围而指定不同的模式，可以指定是否复原索引或工作树的内容。
+除了默认的mixed模式，还有soft和hard模式。欲了解受各模式影响的部分，请参照下面的表格。
+
+|模式名称|	HEAD的位置|	索引|	工作树|
+|---|---|---|---|
+|soft|	修改|	不修改|	不修改|
+|mixed|	修改|	修改|	不修改|
+|hard	|修改|	修改|	修改|
+
+`$ git reset --hard HEAD~~`
+重置到两次前的状态
+
+Reset出错的时候，在ORIG_HEAD上reset 就可以还原到reset前的状态。
+
+`$ git reset --hard ORIG_HEAD`
+
+>主要使用的场合：
+复原修改过的索引的状态(mixed)
+彻底取消最近的提交(hard)
+只取消提交(soft)
+- 在cherry-pick，您可以从其他分支复制指定的提交，然后导入到现在的分支。
+![capture_stepup6_4_1](/assets/capture_stepup6_4_1.png)
+
+把修改移动到主要分支后，用cherry-pick 取出次要分支提交，然后将其添加到master。
+
+`$ git checkout <master branch >`
+`$ git cherry-pick <commit id in subbranch>`
+```
+error: could not apply 99daed2... commit
+hint: after resolving the conflicts, mark the corrected paths
+hint: with 'git add <paths>' or 'git rm <paths>'
+hint: and commit the result with 'git commit'
+```
+如果发生冲突，修改冲突的部分之后再提交。
+```
+$ git add <冲突文件>
+$ git commit
+```
+>主要使用的场合：
+把弄错分支的提交移动到正确的地方
+把其他分支的提交添加到现在的分支
+
+- 在rebase指定i选项，您可以改写、替换、删除或合并提交。
+![capture_stepup6_5_1](/assets/capture_stepup6_5_1.png)
+![capture_stepup6_5_2](/assets/capture_stepup6_5_2.png)
+
+`git rebase -i <branchname>|<repo name>` 这个命令会执行交互式rebase操作(-i表示交互式的),操作对象是那些自最后一次从仓库拉取或者推送之后的所有提交。
+
+`$ git rebase -i HEAD~2`
+将要合并的commit前面的参数pick改成squash
+汇合最近的两次提交
+
+>要修改某次提交，在rebase -i时 将该次commit前的参数pick换成edit
+
+>主要使用的场合：
+在push之前，重新输入正确的提交注解
+清楚地汇合内容含义相同的提交。
+添加最近提交时漏掉的档案
+
+- merge的特殊选项：squash
+
+用这个选项指定分支的合并，就可以把所有汇合的提交添加到另一分支上。
+![capture_stepup6_6_1](/assets/capture_stepup6_6_1.png)
+
+>主要使用的场合：
+汇合主题分支的提交，然后合并提交到目标分支。
+
+切换到master分支后，指定 --squash选项执行merge。
+```
+$ git checkout master
+$ git merge --squash bugfix
+```
+修改冲突的部分，然后提交。
+```
+$ git add <file in confict>
+$ git commit
+```
