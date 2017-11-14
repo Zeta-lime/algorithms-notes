@@ -10,7 +10,7 @@
   * [editor.md](chapter2/md-help.md)
 * [第三章：Atom编辑器](chapter3.md)
 * [第四章：使用Git](chapter4.md)
-
+* [第五章：常见算法](chapter5.md)
 
 
 > note:
