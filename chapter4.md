@@ -17,6 +17,8 @@
     - [think-like-a-git](http://think-like-a-git.net/)
     - [图解git](http://marklodato.github.io/visual-git-guide/index-zh-cn.html)
     - [Customized Training](https://services.github.com/customized-training)
+    - [git详解](http://www.open-open.com/lib/view/1328069609436)
+    - [git与repo入门](http://www.open-open.com/lib/view/open1405048177091.html)
 ## 4.0 git简介
 
 ### 图解git
@@ -376,7 +378,39 @@ We need quotes so that Git will receive the wildcard before our shell can interf
 - 使用log命令，我们可以在数据库的提交记录看到新的提交。
   `$ git log`
   >Use `git log --summary` to see more information for each commit. You can see where new files were added for the first time or where files were deleted. It's a good overview of what's going on in the project.
+  `$ git log -p -2`我们常用 -p 选项展开显示每次提交的内容差异，用 -2 则仅显示最近的两次更新
+  `$ git log --stat`在做代码审查，或者要快速浏览其他协作者提交的更新都作了哪些改动时，就可以用这个选项。此外，还有许多摘要选项可以用，比如 --stat，仅显示简要的增改行数统计.
 
+`$ git log --pretty=oneline`
+  还有个常用的 --pretty 选项，可以指定使用完全不同于默认格式的方式展示提交历史。比如用oneline 将每个提交放在一行显示，这在提交数很大时非常有用。另外还有 short，full 和fuller 可以用，展示的信息或多或少有些不同。
+  最有意思的是 format，可以定制要显示的记录格式，这样的输出便于后期编程提取分析，像这样：
+
+`$ git log --pretty=format:"%h - %an, %ar : %s"`
+ca82a6d - Scott Chacon, 11 months ago : changed the version number
+085bb3b - Scott Chacon, 11 months ago : removed unnecessary test code
+a11bef0 - Scott Chacon, 11 months ago : first commit
+表 2-1 列出了常用的格式占位符写法及其代表的意义。
+
+选项	 说明
+%H	提交对象（commit）的完整哈希字串
+%h	提交对象的简短哈希字串
+%T	树对象（tree）的完整哈希字串
+%t	树对象的简短哈希字串
+%P	父对象（parent）的完整哈希字串
+%p	父对象的简短哈希字串
+%an	作者（author）的名字
+%ae	作者的电子邮件地址
+%ad	作者修订日期（可以用 -date= 选项定制格式）
+%ar	作者修订日期，按多久以前的方式显示
+%cn	提交者(committer)的名字
+%ce	提交者的电子邮件地址
+%cd	提交日期
+%cr	提交日期，按多久以前的方式显示
+%s	提交说明
+你一定奇怪_作者（author）_和_提交者（committer）_之间究竟有何差别，其实作者指的是实际作出修改的人，提交者指的是最后将此 工作成果提交到仓库的人。所以，当你为某个项目发布补丁，然后某个核心成员将你的补丁并入项目时，你就是作者，而那个核心成员就是提交者。
+
+>用 oneline 或 format 时结合 --graph 选项，可以看到开头多出一些 ASCII 字符串表示的简单图形，形象地展示了每个提交所在的分支及其分化衍合情况。
+ 
 `$ gitk`
 >安装git的同时会安装名为gitk的工具(集成diff可视化)。在仓库目录使用这个工具，可以在GUI下确认提交记录。
 
@@ -478,7 +512,7 @@ push到GitHub时，有两种方式https和ssh，使用https需要输入GitHub的
 >The HEAD is a pointer that holds your position within all your different commits. By default HEAD points to your most recent commit, so it can be used as a quick way to reference that commit without having to look up the SHA.
 
 `git diff --staged`
-比较的是暂存文件（staged）和上次提交的快照的区别
+若要看已经暂存起来的文件和上次提交时的快照之间的差异，可以用 git diff --cached 命令。（Git 1.6.1 及更高版本还允许使用git diff --staged，效果是相同的，但更好记些。）
 >Another great use for diff is looking at changes within files that have already been staged. Remember, staged files are files we have told git that are ready to be committed.
 
 参考：[如何读懂diff结果](chapter4\how-to-read-diff-results.md)
@@ -494,10 +528,8 @@ push到GitHub时，有两种方式https和ssh，使用https需要输入GitHub的
 >-- 是必需的，否则若分支与文件同名，恢复出来的是分支而不是文件
 
 ### 从仓库中删除文件
-如果仅仅删除暂存区中的文件
-`git rm --cached <path>...`
-从工作区和暂存区中都删除文件
-`git rm <path>...`
+
+`git rm <path>...`从工作区和暂存区中都删除文件
 这样做之后文件还是在仓库中可以checkout恢复
 >If you want to remove an entire folder, You can use the recursive option on git rm:
 git rm -r folder
@@ -507,6 +539,11 @@ This will recursively remove all folders and files from the given directory.
 >If you happen to delete a file without using 'git rm' you'll find that you still have to 'git rm' the deleted files from the working tree. You can save this step by using the '-a' option on 'git commit', which auto removes deleted files with the commit.
 git commit -am "Delete stuff"
 
+如果删除之前修改过并且已经放到暂存区域的话，则必须要用强制删除选项 -f（译注：即 force 的首字母），以防误删除文件后丢失修改的内容。
+
+另外一种情况是，我们想把文件从 Git 仓库中删除（亦即从暂存区域移除），但仍然希望保留在当前工作目录中。换句话说，仅是从跟踪清单中删除。比如一些大型日志文件或者一堆.a 编译文件，不小心纳入仓库后，要移除跟踪但不删除文件，以便稍后在 .gitignore 文件中补上，用 --cached 选项即可：
+
+`git rm --cached <path>...`
 ## 4.9 创建分支
 当开发者开发某项新功能或者解决某个bug时，他们经常创建一个copy（aka.分支branch）(aka.also known as)，这样就能单独提交。但他们完成时，他们可以将自己的分支与master分支合并
 
@@ -848,14 +885,7 @@ hotFix分支是在发布的产品需要紧急修正时，从master分支创建�
 
 修改时创建的hotFix分支要合并回develop分支。
 
-## 4.14 fetch
-执行pull，远程数据库的内容就会自动合并。但是，有时只是想确认本地数据库的内容而不想合并。这种情况下，请使用fetch。
-
-执行fetch就可以取得远程数据库的最新历史记录。取得的提交会导入到没有名字的分支，这个分支可以从名为FETCH_HEAD的退出。
-在这个状态下，若要把远程数据库的内容合并到本地数据库，可以合并FETCH_HEAD，或者重新执行pull。
-实际上pull的内容是fetch + merge组成的。
-
-## 4.15 标签
+## 4.14 标签
 标签是为了更方便地区分commit而给它标上易懂的名称。
 
 Git可以使用2种标签：轻标签和注解标签。打上的标签是固定的，不能像分支那样可以移动位置。
@@ -901,7 +931,7 @@ banana          连猴子都懂的Git
 
 `$ git tag -d <tagname>`
 
-## 4.16 修改commit
+## 4.15 修改commit
 - 指定amend选项执行提交的话，可以修改同一个分支最近commit的内容和注解。
 `$ git commit --amend`
 
@@ -992,3 +1022,126 @@ $ git merge --squash bugfix
 $ git add <file in confict>
 $ git commit
 ```
+
+##　4.16 忽略某些文件
+一般我们总会有些文件无需纳入 Git 的管理，也不希望它们总出现在未跟踪文件列表。通常都是些自动生成的文件，比如日志文件，或者编译过程中创建的临时文件等。我们可以创建一个名为 .gitignore 的文件，列出要忽略的文件模式。
+
+文件 .gitignore 的格式规范如下：
+
+- 所有空行或者以注释符号 ＃ 开头的行都会被 Git 忽略。
+可以使用标准的 glob 模式匹配。
+  - 匹配模式最后跟反斜杠（/）说明要忽略的是目录。 
+  - 要忽略指定模式以外的文件或目录，可以在模式前加上惊叹号（!）取反。
+- 所谓的 glob 模式是指 shell 所使用的简化了的正则表达式。星号（*）匹配零个或多个任意字符；[abc] 匹配任何一个列在方括号中的字符（这个例子要么匹配一个 a，要么匹配一个 b，要么匹配一个 c）；问号（?）只匹配一个任意字符；如果在方括号中使用短划线分隔两个字符，表示所有在这两个字符范围内的都可以匹配（比如[0-9] 表示匹配所有 0 到 9 的数字）。
+>一个 .gitignore 文件的例子：
+```
+# 此为注释 – 将被 Git 忽略
+*.a       # 忽略所有 .a 结尾的文件
+!lib.a    # 但 lib.a 除外
+/TODO     # 仅仅忽略项目根目录下的 TODO 文件，不包括 subdir/TODO
+build/    # 忽略 build/ 目录下的所有文件
+doc/*.txt # 会忽略 doc/notes.txt 但不包括 doc/server/arch.txt
+```
+
+## 4.17 远程仓库
+远程仓库是指托管在网络上的项目仓库，可能会有好多个，其中有些你只能读，另外有些可以写。同他人协作开发某 个项目时，需要管理这些远程仓库，以便推送或拉取数据，分享各自的工作进展。管理远程仓库的工作，包括添加远程库，移除废弃的远程库，管理各式远程库分支，定义是否跟踪这些分支等等。
+### 查看当前的远程库
+要查看当前配置有哪些远程仓库，可以用 `git remote` 命令，它会列出每个远程库的简短名字。在克隆完某个项目后，至少可以看到一个名为 origin 的远程库，Git 默认使用这个名字来标识你所克隆的原始仓库。
+可以加上 -v 选项（译注：此为 --verbose 的简写，取首字母），显示对应的克隆地址（URL）：
+`$ git remote -v`
+### 添加远程仓库
+要添加一个新的远程仓库，可以指定一个简单的名字，以便将来引用，运行` git remote add [shortname] [url]`
+### 从远程仓库抓取数据
+可以用下面的命令从远程仓库抓取数据到本地：
+`$ git fetch [remote-name]`
+
+执行pull，远程数据库的内容就会自动合并。但是，有时只是想确认本地数据库的内容而不想合并。这种情况下，请使用fetch。
+
+执行fetch就可以取得远程数据库的最新历史记录。取得的提交会导入到没有名字的分支，这个分支可以从名为FETCH_HEAD的退出。
+在这个状态下，若要把远程数据库的内容合并到本地数据库，可以合并FETCH_HEAD，或者重新执行pull。
+实际上pull的内容是fetch + merge组成的。
+
+此命令会到远程仓库中拉取所有你本地仓库中还没有的数据。运行完成后，你就可以在本地访问该远程仓库中的所有分支，将其中某个分支合并到本地，或者只是取出某个分支。
+
+如果是克隆了一个仓库，此命令会自动将远程仓库归于 origin 名下。所以，git fetch origin 会抓取从你上次克隆以来别人上传到此远程仓库中的所有更新（或是上次 fetch 以来别人提交的更新）。有一点很重要，需要记住，fetch 命令只是将远端的数据拉到本地仓库，并不自动合并到当前工作分支，只有当你确实准备好了，才能手工合并。
+
+如果设置了某个分支用于跟踪某个远端仓库的分支，可以使用 git pull 命令自动抓取数据下来，然后将远端分支自动合并到本地仓库中当前分支。在日常工作中我们经常这么用，既快且好。实际上，默认情况下git clone 命令本质上就是自动创建了本地的 master 分支用于跟踪远程仓库中的 master 分支（假设远程仓库确实有 master 分支）。所以一般我们运行git pull，目的都是要从原始克隆的远端仓库中抓取数据后，合并到工作目录中的当前分支。
+### 查看远程仓库信息
+我们可以通过命令 git remote show [remote-name] 查看某个远程仓库的详细信息，比如要看所克隆的 origin 仓库，可以运行：
+```
+$ git remote show origin
+* remote origin
+  URL: git://github.com/schacon/ticgit.git
+  Remote branch merged with 'git pull' while on branch master
+    master
+  Tracked remote branches
+    master
+    ticgit
+```
+除了对应的克隆地址外，它还给出了许多额外的信息。它友善地告诉你如果是在 master 分支，就可以用 git pull 命令抓取数据合并到本地。另外还列出了所有处于跟踪状态中的远端分支。
+
+上面的例子非常简单，而随着使用 Git 的深入，git remote show 给出的信息可能会像这样：
+```
+$ git remote show origin
+* remote origin
+  URL: git@github.com:defunkt/github.git
+  Remote branch merged with 'git pull' while on branch issues
+    issues
+  Remote branch merged with 'git pull' while on branch master
+    master
+  New remote branches (next fetch will store in remotes/origin)
+    caching
+  Stale tracking branches (use 'git remote prune')
+    libwalker
+    walker2
+  Tracked remote branches
+    acl
+    apiv2
+    dashboard2
+    issues
+    master
+    postgres
+  Local branch pushed with 'git push'
+    master:master
+```
+它告诉我们，运行 git push 时缺省推送的分支是什么（译注：最后两行）。它还显示了有哪些远端分支还没有同步到本地（译注：第六行的caching 分支），哪些已同步到本地的远端分支在远端服务器上已被删除（译注：Stale tracking branches 下面的两个分支），以及运行git pull 时将自动合并哪些分支（译注：前四行中列出的 issues 和 master 分支）。
+
+### 远程仓库的删除和重命名
+在新版 Git 中可以用 git remote rename 命令修改某个远程仓库在本地的简短名称，比如想把 pb 改成paul，可以这么运行：
+```
+$ git remote rename pb paul
+$ git remote
+origin
+paul
+```
+注意，对远程仓库的重命名，也会使对应的分支名称发生变化，原来的 pb/master 分支现在成了 paul/master。
+
+碰到远端仓库服务器迁移，或者原来的克隆镜像不再使用，又或者某个参与者不再贡献代码，那么需要移除对应的远端仓库，可以运行 git remote rm 命令：
+```
+$ git remote rm paul
+$ git remote
+origin
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

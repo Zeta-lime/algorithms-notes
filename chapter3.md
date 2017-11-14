@@ -56,11 +56,13 @@ http://blog.csdn.net/column/details/atom-tutorial.html
 `ctrl-/`对代码进行注释
 `ctrl-shift-d`复制一行
 `ctrl-shift-k`删除一行
+`ctrl-enter`向下新起一行
+`ctrl-shift-enter`向上新起一行
 `ctrl-[或]`缩进
 `ctrl-j` 将下一行与当前行合并
 `ctrl-k ctrl-l`使当前字符小写
 `ctrl-k ctrl-u`使当前字符大写
-`ctrl-up\down`代码上移、下移
+`ctrl-up\down`代码上移、下移一行
 - 多行编辑
 `ctrl`+鼠标
 `ctrl-d`选取文档中和当前单词相同的下一处
@@ -230,3 +232,8 @@ Atom的所有配置文件（除了样式表和初始脚本）全部用CSON编写
   [language-vue](https://atom.io/packages/language-vue) vue框架代码高亮
   - 终端  
   [platformio-atom-ide-terminal](https://atom.io/packages/platformio-ide-terminal) 终端插件，支持显示、隐藏及多窗口
+
+## 3.3 Visual Studio code
+- 官方支持中文界面
+- 启动很快、界面更人性化
+- 设置-首选项-键映射扩展，可以将主流IDE和编辑器的快捷键迅速转移过来，可以让你很快适应新的编辑器。
