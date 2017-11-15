@@ -32,3 +32,13 @@ std::distance(iter1,iter2）
 
 - 交换迭代器指向的元素
     `swap(*iter1,*iter2)`注意解引用符`*`
+
+- iterator 与 reverse_iterator转换 
+迭代器（iterator）转逆向迭代器（reverse_iterator），只需要把迭代器转入逆向迭代器的构造函数即可；逆向迭代器转迭代器，调用逆向迭代器的base成员函数即可。
+```c++
+vector<int>::iterator pos;
+vector<int>::reverse_iterator rpos(pos);
+pos = rpos.base();
+```
+- 迭代器越界和试图读取end（）的内容
+在vs2015实验时，正常编译，运行时报错。

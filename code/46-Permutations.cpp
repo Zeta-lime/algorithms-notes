@@ -24,7 +24,7 @@ class Solution
   private:
     void pmt_recursion(vector<vector<int>> &results, vector<int> &nums0, vector<int>::iterator iter1)
     {
-        if (iter1 == (nums0.end() - 1))
+        if (iter1 == nums0.end() - 1)
             results.push_back(nums0);
         else
         {
