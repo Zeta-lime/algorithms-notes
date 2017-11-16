@@ -1,8 +1,10 @@
 # 第五章 算法
 ---
 ##
-### 全排序(permutation)
+### 全排序(permutation)(leetcode31\46\47)
 - 字典序法，求next_permutation(STL里采用的方法)
+
+
 - 递归法
     - 输入向量中没有重复的元素
     思路：
