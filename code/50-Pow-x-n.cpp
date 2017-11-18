@@ -33,7 +33,7 @@ Consider the binary representation of n. For example, if it is "10001011", then 
 
 int main()
 {
-    double x = 2.0;
+    double x = 2.1;
     int n = 10;
     double result = 0;
     Solution s;

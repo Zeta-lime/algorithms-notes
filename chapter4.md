@@ -8,7 +8,7 @@
     - [一个very nice 的网站，手把手教你上手——gitimmersion](http://gitimmersion.com/)
     - [猴子都能懂的GIT入门](https://backlog.com/git-tutorial/cn/)
     - [《git权威指南》](http://www.worldhello.net/gotgit/)以及[gotgithub](http://www.worldhello.net/gotgithub/)
-    - 两个国外的网站：<http://gitready.com/>、 <https://git.wiki.kernel.org/index.php/Git_FAQ>
+    - 几个国外的网站：<http://gitready.com/>、 <https://git.wiki.kernel.org/index.php/Git_FAQ>、
     <http://gitreal.codeschool.com/?utm_source=github&utm_medium=codeschool_option&utm_campaign=trygit>
     - [易百git教程](http://www.yiibai.com/git/)
     - [阮一峰Git远程操作详解](http://www.ruanyifeng.com/blog/2014/06/git_remote.html)
@@ -777,11 +777,11 @@ Automatic merge failed; fix conflicts and then commit the result.
 ```
 连猴子都懂的Git命令
 add 把变更录入到索引中
-<<<<<<< HEAD
+\<<<<<<< HEAD
 commit 记录索引的状态
 =======
 pull 取得远端数据库的内容
->>>>>>> 4c0182374230cd6eaa93b30049ef2386264fe12a
+\>>>>>>> 4c0182374230cd6eaa93b30049ef2386264fe12a
 ```
 
 进行修改

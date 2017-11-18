@@ -1,4 +1,4 @@
-# 第三章 使用Atom作为Markdown编辑器
+# 第三章 编辑器Atom\VSCode
 
 ---
 [TOC]
@@ -253,7 +253,9 @@ Ctrl+shift+P 输入“语言”
     "editor.minimap.showSlider": "always",
     "editor.minimap.enabled": false,
     "terminal.integrated.shell.windows": "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
-    "explorer.confirmDelete": false
+    "explorer.confirmDelete": false,
+    "window.openFoldersInNewWindow": "on",
+    "editor.wordWrap": "on"
 }
 ```
 ### markdown 
@@ -267,118 +269,132 @@ Ctrl+shift+P 输入“语言”
 这只是一个扩展，可以调用C编译器和调试器，其本身不附带。
 安装MinGW，选择组件时需包含有g++编译器,和gdb调试器
 - 设置代码自动补全、定义查看
-ctrl+shift+p 输入“c/cpp:edit configurations”
-打开c_cpp配置json文件
-以下是我的配置：
-```json
-{
-    "configurations": [
-        {
-            "name": "Win32",
-            "intelliSenseMode": "clang-x64",
-            "includePath": [
-                "${workspaceRoot}",
-                "C:/MinGW/lib/gcc/mingw32/6.3.0/include/c++",
-                "C:/MinGW/lib/gcc/mingw32/6.3.0/include/c++/mingw32",
-                "C:/MinGW/lib/gcc/mingw32/6.3.0/include/c++/backward",
-                "C:/MinGW/lib/gcc/mingw32/6.3.0/include",
-                "C:/MinGW/include",
-                "C:/MinGW/lib/gcc/mingw32/6.3.0/include-fixed"
-            ],
-            "defines": [
-                "_DEBUG",
-                "UNICODE",
-                "__GNUC__=6",
-                "__cdecl=__attribute__((__cdecl__))"
-            ],
-            "browse": {
-                "path": [
+    ctrl+shift+p 输入“c/cpp:edit configurations”
+    打开c_cpp配置json文件
+    以下是我的配置：
+    ```json
+    {
+        "configurations": [
+            {
+                "name": "Win32",
+                "intelliSenseMode": "clang-x64",
+                "includePath": [
+                    "${workspaceRoot}",
+                    "C:/MinGW/lib/gcc/mingw32/6.3.0/include/c++",
+                    "C:/MinGW/lib/gcc/mingw32/6.3.0/include/c++/mingw32",
+                    "C:/MinGW/lib/gcc/mingw32/6.3.0/include/c++/backward",
                     "C:/MinGW/lib/gcc/mingw32/6.3.0/include",
-                    "C:/MinGW/lib/gcc/mingw32/6.3.0/include-fixed",
-                    "C:/MinGW/include/*"
+                    "C:/MinGW/include",
+                    "C:/MinGW/lib/gcc/mingw32/6.3.0/include-fixed"
                 ],
-                "limitSymbolsToIncludedHeaders": true,
-                "databaseFilename": ""
+                "defines": [
+                    "_DEBUG",
+                    "UNICODE",
+                    "__GNUC__=6",
+                    "__cdecl=__attribute__((__cdecl__))"
+                ],
+                "browse": {
+                    "path": [
+                        "C:/MinGW/lib/gcc/mingw32/6.3.0/include",
+                        "C:/MinGW/lib/gcc/mingw32/6.3.0/include-fixed",
+                        "C:/MinGW/include/*"
+                    ],
+                    "limitSymbolsToIncludedHeaders": true,
+                    "databaseFilename": ""
+                }
             }
-        }
-    ],
-    "version": 3
-}
-```
+        ],
+        "version": 3
+    }
+    ```
+
 - 设置编译器
-常用的C编译器有GNU的gcc，LLVM的clang，微软VS里的MSVC，常见[各编译器对C++标准的支持](http://zh.cppreference.com/w/cpp/compiler_support)
-打开“任务-配置任务”
-```
-{
-    // See https://go.microsoft.com/fwlink/?LinkId=733558
-    // for the documentation about the tasks.json format
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "g++",
-            "options": {
-                "cwd": "${fileDirname}"
-            },
-            "type": "shell",
-            "command": "g++",
-            "args": [
-                "-g", "${file}", "-o", "${fileBasenameNoExtension}.exe"
-            ],
-            "group": {
-                "kind": "build",
-                "isDefault": true
+    常用的C编译器有GNU的gcc，LLVM的clang，微软VS里的MSVC，常见[各编译器对C++标准的支持](http://zh.cppreference.com/w/cpp/compiler_support)
+    打开“任务-配置任务”
+    ```
+    {
+        // See https://go.microsoft.com/fwlink/?LinkId=733558
+        // for the documentation about the tasks.json format
+        "version": "2.0.0",
+        "tasks": [
+            {
+                "label": "g++",
+                "options": {
+                    "cwd": "${fileDirname}"
+                },
+                "type": "shell",
+                "command": "g++",
+                "args": [
+                    "-g", "${file}", "-o", "${fileBasenameNoExtension}.exe"
+                ],
+                "group": {
+                    "kind": "build",
+                    "isDefault": true
+                }
             }
-        }
-    ]
-}
-```
+        ]
+    }
+    ```
 
 - 设置调试器
-打开“调试-打开配置”
-```
-{
-    // 使用 IntelliSense 了解相关属性。 
-    // 悬停以查看现有属性的描述。
-    // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
-    // ${workspaceFolder} the path of the workspace folder that contains the tasks.json file
-    // ${workspaceFolderBasename} the name of the workspace folder that contains the tasks.json file without any slashes (/)
-    // ${file} the current opened file
-    // ${relativeFile} the current opened file relative to the workspace folder containing the file
-    // ${fileBasename} the current opened file's basename
-    // ${fileBasenameNoExtension} the current opened file's basename without the extension
-    // ${fileDirname} the current opened file's dirname
-    // ${fileExtname} the current opened file's extension
-    // ${cwd} the task runner's current working directory on startup
-    // ${lineNumber} the current selected line number in the active file
-    // You can also reference environment variables through ${env:Name} (for example, ${env:PATH}). Be sure to match the environment variable name's casing, for example ${env:Path} on Windows.
+    打开“调试-打开配置”
+    ```
+    {
+        // 使用 IntelliSense 了解相关属性。 
+        // 悬停以查看现有属性的描述。
+        // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+        // ${workspaceFolder} the path of the workspace folder that contains the tasks.json file
+        // ${workspaceFolderBasename} the name of the workspace folder that contains the tasks.json file without any slashes (/)
+        // ${file} the current opened file
+        // ${relativeFile} the current opened file relative to the workspace folder containing the file
+        // ${fileBasename} the current opened file's basename
+        // ${fileBasenameNoExtension} the current opened file's basename without the extension
+        // ${fileDirname} the current opened file's dirname
+        // ${fileExtname} the current opened file's extension
+        // ${cwd} the task runner's current working directory on startup
+        // ${lineNumber} the current selected line number in the active file
+        // You can also reference environment variables through ${env:Name} (for example, ${env:PATH}). Be sure to match the environment variable name's casing, for example ${env:Path} on Windows.
 
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "(gdb) Launch",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${fileDirname}/${fileBasenameNoExtension}.exe",
-            "args": [],
-            "stopAtEntry": false,
-            "cwd": "${workspaceFolder}",
-            "environment": [],
-            "MIMode": "gdb",
-            "miDebuggerPath": "C:\\MinGW\\bin\\gdb.exe",
-            "externalConsole": true,
-            "setupCommands": [
-                {
-                    "description": "Enable pretty-printing for gdb",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": false
+        "version": "0.2.0",
+        "configurations": [
+            {
+                "name": "(gdb) Launch",
+                "type": "cppdbg",
+                "request": "launch",
+                "program": "${fileDirname}/${fileBasenameNoExtension}.exe",
+                "args": [],
+                "stopAtEntry": false,
+                "cwd": "${workspaceFolder}",
+                "environment": [],
+                "MIMode": "gdb",
+                "miDebuggerPath": "C:\\MinGW\\bin\\gdb.exe",
+                "externalConsole": true,
+                "setupCommands": [
+                    {
+                        "description": "Enable pretty-printing for gdb",
+                        "text": "-enable-pretty-printing",
+                        "ignoreFailures": false
+                    }
+                ],
+                "logging": {
+                    "programOutput": true
                 }
-            ],
-            "logging": {
-                "programOutput": true
             }
-        }
-    ]
-}
-```
-在cpp文件下，先运行“生成任务”，然后进行“调试”
-“非调试启动”可以直接运行生成的exe
+        ]
+    }
+    ```
+    在cpp文件下，先运行“生成任务”，然后进行“调试”
+    “非调试启动”可以直接运行生成的exe
+
+- 预览模式
+    VScode默认打开预览模式，单击左侧资源管理器的文件，会打开该文件的预览，tab名字是斜体字，表示是预览模式，编辑该文件会进入普通模式。
+    预览模式下，单击其他未打开的文件，将会覆盖现有文件
+    若要以普通模式打开文件，打开时用双击
+    若要默认以普通模式打开文件，设置`"workbench.editor.enablePreview": false`
+
+- 新窗口中打开文件夹
+    默认打开新文件夹会覆盖当前活动窗口，设置`"window.openFoldersInNewWindow": "off"`，将会在新窗口打开文件夹
+
+## 3.5 其他IDE
+DEV-C++ 、Code::Block
+两个比较简单的C++编译调试IDE
