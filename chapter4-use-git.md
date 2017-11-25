@@ -28,7 +28,7 @@
 
 - git命令
 
-![git命令](http://img.blog.csdn.net/20161202183909310 "git命令")
+![git命令](assets/20161202183909310.jpg "git命令")
 ![626308-183f7eb9bbbe2652](/assets/626308-183f7eb9bbbe2652.png)
 
 ### git原理概念

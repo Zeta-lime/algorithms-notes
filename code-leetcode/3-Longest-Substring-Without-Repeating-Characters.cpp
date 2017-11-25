@@ -20,7 +20,7 @@ class Solution
             if (ans > s.length() - i)
                 return ans;
             int j = i, temp = 0;
-            while (!char_set.insert(s[j]).second && j < s.length())
+            while (char_set.insert(s[j]).second && j < s.length())
             {
                 ++temp;
                 ++j;
