@@ -153,6 +153,9 @@ int main()
     return 0;
 }
 ```
+>输出布尔值
+std::cout<<std::boolalpha<<bool_variable<<endl; 
+
 ### 字符与数字转换
 - c风格(a->ascii i->int)
     ```c
@@ -1274,6 +1277,18 @@ map就是一个容器，里面装的就是若干个pair。每个pair的第一个
 
 **map 的使用**
 
+>插入元素
+`map::insert`
+pair<iterator, bool> insert(const value_type& Val);
+`map::emplace`
+Inserts an element constructed in place (no copy or move operations are performed) into a map.
+template <class... Args>  
+pair<iterator, bool> emplace(Args&&... args);
+`map::operator[]`
+Type& operator[](const Key& key);
+如果已存在则修改，如果不存在，视为插入
+使用make_pair初始化时需要include<unility> 
+
 *   map 初始化：
 
     ```c++
@@ -1816,6 +1831,7 @@ STL中算法大致分为四类：
 *   **search:**
 
     > 给出两个范围，返回一个ForwardIterator，查找成功指向第一个范围内第一次出现子序列(第二个范围)的位置，查找失败指向last1。重载版本使用自定义的比较操作。
+    C++17补充了不少新的查找算法 https://en.cppreference.com/w/cpp/algorithm/search
 
 *   **search_n:**
 

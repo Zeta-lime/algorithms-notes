@@ -1,23 +1,24 @@
-#include<iostream>
-#include<vector>
+#include <iostream>
+#include <vector>
+#include <unordered_set>
 using namespace std;
 
-class Solution {
-public:
-    int lengthOfLongestSubstring(string s) {
-        vector<int> charIndex(256, -1);
-        int longest = 0;
-        int m = -1;
-        for(int i=0;i<s.length();i++)
-        {
-            m=max(charIndex[s[i]]+1,m);
-            charIndex[s[i]] = i; 
-            longest = max(longest, i-m+1);
-        
-        }
-    return longest;
-}
-};
+// class Solution {
+// public:
+//     int lengthOfLongestSubstring(string s) {
+//         vector<int> charIndex(256, -1);
+//         int longest = 0;
+//         int m = -1;
+//         for(int i=0;i<s.length();i++)
+//         {
+//             m=max(charIndex[s[i]]+1,m);
+//             charIndex[s[i]] = i;
+//             longest = max(longest, i-m+1);
+
+//         }
+//     return longest;
+// }
+// };
 
 // string stringToString(string input) {
 //     assert(input.length() >= 2);
@@ -45,15 +46,40 @@ public:
 //     return result;
 // }
 
-int main() {
+class Solution
+{
+  public:
+    int lengthOfLongestSubstring(string s)
+    {
+        int ans = 0;
+        int s_length = s.size();
+        unordered_set<char> char_set;
+        int i = 0, j = 0;
+        while (i < s_length && j < s_length)
+        {
+            if (ans >= s_length - i)
+                return ans;
+            if (char_set.insert(s[j]).second){
+                ++j;
+                ans = ans < (j-i) ? (j-i) : ans;
+            }
+            else
+                char_set.erase(s[i++]);
+        }
+        return ans;
+    }
+};
+
+int main()
+{
     string line;
     // while (getline(cin, line)) {
     //     string s = stringToString(line);
-        string s = "abcabcbb";
-        int ret = Solution().lengthOfLongestSubstring(s);
+    string s = "abcabcbb";
+    int ret = Solution().lengthOfLongestSubstring(s);
 
-        string out = to_string(ret);
-        cout << out << endl;
+    string out = to_string(ret);
+    cout << out << endl;
     // }
     return 0;
 }
