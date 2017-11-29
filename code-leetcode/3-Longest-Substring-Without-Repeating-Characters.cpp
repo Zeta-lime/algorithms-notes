@@ -67,10 +67,8 @@ class Solution
         int s_length = s.size();
         unordered_set<char> char_set;
         int i = 0, j = 0;
-        while (i < s_length && j < s_length)
+        while (i < s_length && j < s_length && ans <= s_length - i)
         {
-            if (ans >= s_length - i)
-                return ans;
             if (char_set.insert(s[j]).second)
             {
                 ++j;
@@ -112,20 +110,20 @@ class Solution
 // int[26] for Letters 'a' - 'z' or 'A' - 'Z'
 // int[128] for ASCII
 // int[256] for Extended ASCII
+//**(18 ms)**
 
 class Solution
 {
   public:
     int lengthOfLongestSubstring(string s)
     {
-        vector<int> charIndex(256, -1);
+        vector<int> charIndex(256, -1);  //-1 is for the same problem when input a single character
         int longest = 0;
-        int m = -1;
-        for (int i = 0; i < s.length(); i++)
+        for (int j = 0, i = 0; j < s.length(); j++)
         {
-            m = max(charIndex[s[i]] + 1, m);
-            longest = max(longest, i - m + 1);
-            charIndex[s[i]] = i;
+            i = max(charIndex[s[j]] + 1, i);
+            longest = max(longest, j - i + 1);
+            charIndex[s[j]] = j;
         }
         return longest;
     }
@@ -151,3 +149,57 @@ class Solution
         return ans;
     }
 };
+//summary: 使用hashset和hashmap时注意结合具体的情景，如果需要做hash的数据集比较有特点，可以考虑简化。
+//this is how to find a longest substring without repeat
+//it will be a little easier to find the longest subsequence without repeat ,just use a char_array to instead of unordered set. 
+
+//调试程序
+
+#include <iostream>
+#include <vector>
+#include <unordered_set>
+using namespace std;
+
+
+
+// string stringToString(string input) {
+//     assert(input.length() >= 2);
+//     string result;
+//     for (int i = 1; i < input.length() -1; i++) {
+//         char currentChar = input[i];
+//         if (input[i] == '\\') {
+//             char nextChar = input[i+1];
+//             switch (nextChar) {
+//                 case '\"': result.push_back('\"'); break;
+//                 case '/' : result.push_back('/'); break;
+//                 case '\\': result.push_back('\\'); break;
+//                 case 'b' : result.push_back('\b'); break;
+//                 case 'f' : result.push_back('\f'); break;
+//                 case 'r' : result.push_back('\r'); break;
+//                 case 'n' : result.push_back('\n'); break;
+//                 case 't' : result.push_back('\t'); break;
+//                 default: break;
+//             }
+//             i++;
+//         } else {
+//           result.push_back(currentChar);
+//         }
+//     }
+//     return result;
+// }
+
+
+
+int main()
+{
+    string line;
+    // while (getline(cin, line)) {
+    //     string s = stringToString(line);
+    string s = "abcabcbb";
+    int ret = Solution().lengthOfLongestSubstring(s);
+
+    string out = to_string(ret);
+    cout << out << endl;
+    // }
+    return 0;
+}

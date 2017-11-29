@@ -1,85 +1,75 @@
-#include <iostream>
 #include <vector>
-#include <unordered_set>
+#include <iostream>
+#include <algorithm>
+#include <sstream>
+#include <string>
 using namespace std;
-
-// class Solution {
-// public:
-//     int lengthOfLongestSubstring(string s) {
-//         vector<int> charIndex(256, -1);
-//         int longest = 0;
-//         int m = -1;
-//         for(int i=0;i<s.length();i++)
-//         {
-//             m=max(charIndex[s[i]]+1,m);
-//             charIndex[s[i]] = i;
-//             longest = max(longest, i-m+1);
-
-//         }
-//     return longest;
-// }
-// };
-
-// string stringToString(string input) {
-//     assert(input.length() >= 2);
-//     string result;
-//     for (int i = 1; i < input.length() -1; i++) {
-//         char currentChar = input[i];
-//         if (input[i] == '\\') {
-//             char nextChar = input[i+1];
-//             switch (nextChar) {
-//                 case '\"': result.push_back('\"'); break;
-//                 case '/' : result.push_back('/'); break;
-//                 case '\\': result.push_back('\\'); break;
-//                 case 'b' : result.push_back('\b'); break;
-//                 case 'f' : result.push_back('\f'); break;
-//                 case 'r' : result.push_back('\r'); break;
-//                 case 'n' : result.push_back('\n'); break;
-//                 case 't' : result.push_back('\t'); break;
-//                 default: break;
-//             }
-//             i++;
-//         } else {
-//           result.push_back(currentChar);
-//         }
-//     }
-//     return result;
-// }
 
 class Solution
 {
   public:
-    int lengthOfLongestSubstring(string s)
+    double findMedianSortedArrays(vector<int> &nums1, vector<int> &nums2)
     {
-        int ans = 0;
-        int s_length = s.size();
-        unordered_set<char> char_set;
+        int len1 = nums1.size(), len2 = nums2.size(), len3 = (len1 + len2) / 2 + 1;
         int i = 0, j = 0;
-        while (i < s_length && j < s_length)
+        vector<int> nums3;
+        while (i < len1 && j < len2 && i+j < len3)
         {
-            if (ans >= s_length - i)
-                return ans;
-            if (char_set.insert(s[j]).second){
-                ++j;
-                ans = ans < (j-i) ? (j-i) : ans;
-            }
+            if (nums1[i] < nums2[j])
+                nums3.push_back(nums1[i++]);
             else
-                char_set.erase(s[i++]);
+                nums3.push_back(nums2[j++]);
         }
-        return ans;
+        if (i < len1)
+            while (i+j < len3)
+                nums3.push_back(nums1[i++]);
+        else
+            while (i+j < len3)
+                nums3.push_back(nums2[j++]);
+        return (len1 + len2) % 2 ? static_cast<double>(nums3[len3 - 1]) : (nums3[len3 - 1] + nums3[len3 - 2]) / 2.0;
     }
 };
 
-int main()
-{
+// void trimLeftTrailingSpaces(string &input) {
+//     input.erase(input.begin(), find_if(input.begin(), input.end(), [](int ch) {
+//         return !isspace(ch);
+//     }));
+// }
+
+// void trimRightTrailingSpaces(string &input) {
+//     input.erase(find_if(input.rbegin(), input.rend(), [](int ch) {
+//         return !isspace(ch);
+//     }).base(), input.end());
+// }
+
+// vector<int> stringToIntegerVector(string input) {
+//     vector<int> output;
+//     trimLeftTrailingSpaces(input);
+//     trimRightTrailingSpaces(input);
+//     input = input.substr(1, input.length() - 2);
+//     stringstream ss;
+//     ss.str(input);
+//     string item;
+//     char delim = ',';
+//     while (getline(ss, item, delim)) {
+//         output.push_back(stoi(item));
+//     }
+//     return output;
+// }
+
+int main() {
     string line;
     // while (getline(cin, line)) {
-    //     string s = stringToString(line);
-    string s = "abcabcbb";
-    int ret = Solution().lengthOfLongestSubstring(s);
+        // vector<int> nums1 = stringToIntegerVector(line);
+        // getline(cin, line);
+        // vector<int> nums2 = stringToIntegerVector(line);
+        vector<int> nums1 = {1,3};
+        vector<int> nums2 = {2};
+        double ret = Solution().findMedianSortedArrays(nums1, nums2);
 
-    string out = to_string(ret);
-    cout << out << endl;
+        string out = to_string(ret);
+        cout << out << endl;
+        system("pause");
     // }
     return 0;
 }
