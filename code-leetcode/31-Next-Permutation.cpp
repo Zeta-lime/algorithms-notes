@@ -9,24 +9,25 @@
 // 1,2,3 → 1,3,2
 // 3,2,1 → 1,2,3
 // 1,1,5 → 1,5,1
+//字典序法
 
 class Solution
 {
-public:
+  public:
 	void nextPermutation(vector<int> &nums)
 	{
 		auto riter_select1 = nums.rbegin() + 1;
-		while (riter_select1 != nums.rend() && *riter_select1 >= *(riter_select1 - 1))
+		while (riter_select1 != nums.rend() && *riter_select1 >= *(riter_select1 - 1)) //两个判断不能交换位置，否则nums的size为1时引发错误
 			++riter_select1;
-		if (riter_select1 == nums.rend())
+		if (riter_select1 == nums.rend()) //若输入字典序已经是最大，反转输出最小字典序
 		{
 			reverse(nums.begin(), nums.end());
 			return;
 		}
 		auto riter_select2 = nums.rbegin();
-		while (*riter_select2 <= *riter_select1&&riter_select2 != riter_select1)
+		while (*riter_select2 <= *riter_select1 && riter_select2 != riter_select1)
 			++riter_select2;
 		swap(*riter_select1, *riter_select2);
-		reverse(nums.rbegin(),riter_select1);
+		reverse(nums.rbegin(), riter_select1);
 	}
 };

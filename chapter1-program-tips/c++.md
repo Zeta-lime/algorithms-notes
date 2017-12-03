@@ -2058,3 +2058,9 @@ vector 和deque提供的是RandomAccessIterator，list提供的是BidirectionalI
 |priority_queue|   不支持|
 参考：
 http://www.cnblogs.com/yc_sunniwell/archive/2010/06/25/1764934.html
+
+http://net.pku.edu.cn/~yhf/UsingSTL.htm
+
+http://www.yolinux.com/TUTORIALS/LinuxTutorialC++STL.html
+
+http://www.cppblog.com/mzty/

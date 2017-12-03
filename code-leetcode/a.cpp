@@ -13,20 +13,6 @@ class Solution
         int len1 = nums1.size(), len2 = nums2.size(), len3 = (len1 + len2) / 2 + 1;
         int i = 0, j = 0;
         vector<int> nums3;
-        while (i < len1 && j < len2 && i+j < len3)
-        {
-            if (nums1[i] < nums2[j])
-                nums3.push_back(nums1[i++]);
-            else
-                nums3.push_back(nums2[j++]);
-        }
-        if (i < len1)
-            while (i+j < len3)
-                nums3.push_back(nums1[i++]);
-        else
-            while (i+j < len3)
-                nums3.push_back(nums2[j++]);
-        return (len1 + len2) % 2 ? static_cast<double>(nums3[len3 - 1]) : (nums3[len3 - 1] + nums3[len3 - 2]) / 2.0;
     }
 };
 

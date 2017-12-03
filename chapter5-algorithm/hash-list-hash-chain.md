@@ -1,4 +1,4 @@
-hash list hash chain see wikipedia
+hash list ,hash chain see wikipedia
 
 hash pointer hash指针
 see 一个北邮学长的个人博客，主要focus区块链
