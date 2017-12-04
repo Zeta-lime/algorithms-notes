@@ -4,3 +4,11 @@
     2. 整个结构体的大小必须是其中最大成员大小的整数倍。
     https://www.zhihu.com/question/27862634
     https://software.intel.com/en-us/articles/coding-for-performance-data-alignment-and-structures
+
+- C++数值限制
+    定义于头文件<limits>
+    std::numeric_limits<type>
+    参考：http://www.cplusplus.com/reference/limits/numeric_limits/
+
+- 左值、右值、移动语义、完美转发
+    https://codinfox.github.io/dev/2014/06/03/move-semantic-perfect-forward/
