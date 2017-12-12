@@ -448,6 +448,7 @@ int main () {
 3. [boost floating-point Numbers](http://www.boost.org/doc/libs/1_65_1/libs/multiprecision/doc/html/boost_multiprecision/tut/floats.html)
 4. [boost mutiprecision](http://www.boost.org/doc/libs/1_65_1/libs/multiprecision/doc/html/index.html)
 5. [一个浮点数跨平台产生的问题](https://coolshell.cn/articles/11235.html)
+6. [你应该知道的浮点数基础知识]http://cenalulu.github.io/linux/about-denormalized-float-number/
 
 
 

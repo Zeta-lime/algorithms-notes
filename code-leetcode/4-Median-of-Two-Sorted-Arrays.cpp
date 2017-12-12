@@ -99,3 +99,8 @@ class Solution
             return (max(*p1, *p2) + min(*(p1 + 1), *(p2 + 1))) / 2;
     }
 };
+
+
+// version 3
+// 二分查找，比较，丢弃不可能的部分，修正目标，迭代
+// http://blog.csdn.net/zxzxy1988/article/details/8587244
